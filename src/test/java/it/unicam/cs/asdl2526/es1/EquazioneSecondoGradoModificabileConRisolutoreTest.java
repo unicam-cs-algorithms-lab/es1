@@ -1,7 +1,7 @@
 /**
  * 
  */
-package it.unicam.cs.asdl2526.estemplate;
+package it.unicam.cs.asdl2526.es1;
 
 import static org.junit.jupiter.api.Assertions.*;
 
