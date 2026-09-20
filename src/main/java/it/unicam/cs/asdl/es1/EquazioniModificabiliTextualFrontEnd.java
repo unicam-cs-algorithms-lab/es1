@@ -1,50 +1,61 @@
-package it.unicam.cs.asdl2526.es1;
+package it.unicam.cs.asdl.es1;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
 /**
- * Front-end testuale per permettere l'uso delle classi di <i>core business
- * logic</i> che risolvono le equazioni di secondo grado, in particolare le
- * classi EquazioneSecondoGradoModificabileConRisolutore e
- * SoluzioneEquazioneSecondoGrado.
- * 
- * ATTENZIONE! C'è un bug da trovare
- * 
- * fare il debug e modificare il codice in modo che non vada in loop se
- * l'inserimento del parametro a o degli altri parametri richiede almeno una
- * retry. Indicare con i commenti ... DOVE è stato modificato il file originale
- * e perché.
+ * Front-end testuale dell'applicazione per la risoluzione di equazioni di
+ * secondo grado modificabili.
+ * <p>
+ * La classe rappresenta il livello di interazione con l'utente: legge dati
+ * dallo standard input, li converte in valori numerici, richiama esclusivamente
+ * l'API pubblica della business logic e presenta i risultati sullo standard
+ * output. La classe {@link EquazioneSecondoGradoModificabileConRisolutore}, al
+ * contrario, non contiene codice di input/output.
+ * <p>
+ * <strong>Parte dell'esercitazione:</strong> questa versione contiene
+ * intenzionalmente un bug nella gestione dei tentativi di inserimento. Se per
+ * uno dei coefficienti è necessario ripetere l'input almeno una volta, il
+ * programma può rimanere in un ciclo di richiesta anche dopo un successivo
+ * inserimento valido. Il bug deve essere individuato tramite lettura/debug del
+ * codice e corretto senza spostare nel front-end responsabilità proprie della
+ * business logic.
  *
- * 
  * @author Luca Tesei
  */
 public class EquazioniModificabiliTextualFrontEnd {
-    /*
-     * Costante piccola per il confronto di due numeri double
-     */
+
+    /* Deve essere coerente con la soglia usata dalla business logic per a. */
     private static final double EPSILON = 1.0E-15;
 
+    /**
+     * Avvia il front-end testuale. Per ogni equazione legge i tre coefficienti,
+     * risolve l'equazione tramite la business logic, stampa il risultato e
+     * chiede all'utente se desidera continuare.
+     *
+     * @param args argomenti della linea di comando; non vengono utilizzati
+     */
     public static void main(String[] args) {
         EquazioneSecondoGradoModificabileConRisolutore eq = null;
         boolean terminate = false;
         BufferedReader input = new BufferedReader(
                 new InputStreamReader(System.in));
-        double a = 1; // valori iniziali non significativi
+
+        // Valori iniziali non significativi: vengono sostituiti dall'input.
+        double a = 1;
         double b = 1;
         double c = 1;
+
         while (!terminate) {
-            // leggo il parametro a
+            // Lettura e validazione del coefficiente a.
             boolean retry = false;
             do {
-
                 System.out.println(
                         "Inserisci il valore del parametro a e premi INVIO");
                 try {
                     String aInput = input.readLine();
                     a = Double.parseDouble(aInput);
-                    // controllo se il valore inserito è zero
                     if (Math.abs(a) < EPSILON) {
                         System.out.println(
                                 "Errore: Il valore del parametro a non può essere zero! Ritenta...");
@@ -59,13 +70,14 @@ public class EquazioniModificabiliTextualFrontEnd {
                     retry = true;
                 }
             } while (retry);
-            // leggo il parametro b
+
+            // Lettura e validazione del coefficiente b.
             do {
                 System.out.println(
                         "Inserisci il valore del parametro b e premi INVIO");
                 try {
-                    String aInput = input.readLine();
-                    b = Double.parseDouble(aInput);
+                    String bInput = input.readLine();
+                    b = Double.parseDouble(bInput);
                 } catch (IOException e) {
                     System.err.println("Errore di Input/Output!");
                     System.exit(1);
@@ -75,13 +87,14 @@ public class EquazioniModificabiliTextualFrontEnd {
                     retry = true;
                 }
             } while (retry);
-            // leggo il parametro c
+
+            // Lettura e validazione del coefficiente c.
             do {
                 System.out.println(
                         "Inserisci il valore del parametro c e premi INVIO");
                 try {
-                    String aInput = input.readLine();
-                    c = Double.parseDouble(aInput);
+                    String cInput = input.readLine();
+                    c = Double.parseDouble(cInput);
                 } catch (IOException e) {
                     System.err.println("Errore di Input/Output!");
                     System.exit(1);
@@ -91,8 +104,8 @@ public class EquazioniModificabiliTextualFrontEnd {
                     retry = true;
                 }
             } while (retry);
-            // Se non esiste, creo l'equazione, altrimenti
-            // aggiorno i parametri
+
+            // Il front-end usa soltanto l'API pubblica della business logic.
             if (eq == null)
                 eq = new EquazioneSecondoGradoModificabileConRisolutore(a, b,
                         c);
@@ -101,19 +114,17 @@ public class EquazioniModificabiliTextualFrontEnd {
                 eq.setB(b);
                 eq.setC(c);
             }
-            // Risolvo l'equazione corrente
+
             eq.solve();
-            // Prendo la soluzione corrente
             SoluzioneEquazioneSecondoGrado sol = eq.getSolution();
-            // Comunico la soluzione all'utente
             System.out.println(sol);
-            // Chiedo se l'utente vuole continuare con un'altra equazione
+
             System.out.println(
                     "Vuoi risolvere un'altra equazione? Inserisci 's' o 'S' per continuare, qualsiasi altro carattere per uscire e premi INVIO");
             String resp = null;
             try {
-                String aInput = input.readLine();
-                resp = aInput.trim().toUpperCase();
+                String responseInput = input.readLine();
+                resp = responseInput.trim().toUpperCase();
             } catch (IOException e) {
                 System.err.println("Errore di Input/Output!");
                 System.exit(1);
@@ -123,4 +134,13 @@ public class EquazioniModificabiliTextualFrontEnd {
         }
     }
 
+    /*
+     * CONSEGNA DELL'ESERCITAZIONE
+     *
+     * Dopo aver corretto il bug, sostituire questo testo con un breve commento
+     * che spieghi:
+     * 1) qual era l'origine del malfunzionamento;
+     * 2) perché il programma poteva rimanere nel ciclo di retry;
+     * 3) quale modifica è stata effettuata per risolvere il problema.
+     */
 }
