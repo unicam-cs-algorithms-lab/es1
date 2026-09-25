@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"it.unicam.cs.asdl.es1","l":"EquazioneSecondoGrado"},{"p":"it.unicam.cs.asdl.es1","l":"EquazioneSecondoGradoModificabileConRisolutore"},{"p":"it.unicam.cs.asdl.es1","l":"SoluzioneEquazioneSecondoGrado"}];updateSearchResults();
